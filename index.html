@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Personal Curriculum</title>
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Curriculum">
+
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #1a1814;
+    --ink2: #4a4740;
+    --ink3: #8a8780;
+    --page: #faf8f3;
+    --cream: #f2efe6;
+    --cream2: #e8e4d8;
+    --rule: #ddd9cc;
+    --math: #c84b2f;
+    --lang: #1e6b4a;
+    --self: #4a3aa0;
+    --math-bg: #fdf1ee;
+    --lang-bg: #edf7f2;
+    --self-bg: #f0eefb;
+    --phase-num: #bdb9ac;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--page);
+    color: var(--ink);
+    line-height: 1.5;
+    -webkit-tap-highlight-color: transparent;
+    /* Added padding for the iPhone 'notch' area when in full-screen mode */
+    padding-top: env(safe-area-inset-top);
+  }
+
+  /* The rest of your original styles remain exactly the same */
+  .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+  header { margin-bottom: 40px; border-bottom: 1px solid var(--rule); padding-bottom: 20px; }
+  h1 { font-family: 'DM Serif Display', serif; font-size: 2.5rem; font-weight: 400; margin-bottom: 8px; }
+  .subtitle { font-family: 'DM Mono', monospace; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink3); }
+  
+  nav { display: flex; gap: 8px; margin-bottom: 30px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none; }
+  nav::-webkit-scrollbar { display: none; }
+  
+  .nav-btn { 
+    background: var(--cream); border: 1px solid var(--rule); padding: 8px 16px; border-radius: 20px;
+    font-size: 0.9rem; font-weight: 500; cursor: pointer; white-space: nowrap; transition: all 0.2s; color: var(--ink2);
+  }
+  .nav-btn.active { background: var(--ink); color: white; border-color: var(--ink); }
+
+  .track-page { display: none; animation: fadeIn 0.4s ease; }
+  .track-page.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  .phase { margin-bottom: 40px; position: relative; }
+  .phase-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 15px; }
+  .phase-num { font-family: 'DM Mono', monospace; font-size: 0.8rem; color: var(--phase-num); font-weight: 500; }
+  .phase-title { font-family: 'DM Serif Display', serif; font-size: 1.4rem; }
+
+  .topic-list { display: flex; flex-direction: column; gap: 16px; }
+  .topic { display: flex; gap: 12px; }
+  .topic-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--rule); margin-top: 8px; flex-shrink: 0; }
+  .topic-text { font-size: 1rem; color: var(--ink2); }
+  .topic-text strong { color: var(--ink); font-weight: 600; }
+  .note { display: block; font-size: 0.85rem; color: var(--ink3); margin-top: 4px; font-style: italic; }
+
+  .resource-block { margin-top: 15px; padding: 15px; border-radius: 8px; border-left: 3px solid var(--rule); background: var(--cream); }
+  .resource-label { font-family: 'DM Mono', monospace; font-size: 0.7rem; text-transform: uppercase; color: var(--ink3); margin-bottom: 8px; }
+  .resource-item { font-size: 0.9rem; margin-bottom: 4px; color: var(--ink2); }
+
+  /* Track Specific Colors */
+  #page-math .phase-num { color: var(--math); }
+  #page-math .resource-block { border-left-color: var(--math); background: var(--math-bg); }
+  #page-lang .phase-num { color: var(--lang); }
+  #page-lang .resource-block { border-left-color: var(--lang); background: var(--lang-bg); }
+  #page-self .phase-num { color: var(--self); }
+  #page-self .resource-block { border-left-color: var(--self); background: var(--self-bg); }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>Curriculum</h1>
+    <div class="subtitle">Personal Learning Architecture</div>
+  </header>
+
+  <nav>
+    <button class="nav-btn active" onclick="show('math', this)">Mathematics</button>
+    <button class="nav-btn" onclick="show('lang', this)">Language & Logic</button>
+    <button class="nav-btn" onclick="show('self', this)">Self-Regulation</button>
+  </nav>
+
+  <div id="page-math" class="track-page active">
+    <div class="phase">
+      <div class="phase-header"><span class="phase-num">01</span><h2 class="phase-title">The Foundation</h2></div>
+      <div class="topic-list">
+        <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Algebraic Intuition</strong> — functions, variables, and the logic of balance<span class="note">Don't just solve for X; understand why X is related to Y.</span></div></div>
+        <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Geometry & Spatial Reasoning</strong> — proofs, logic, and visual problem solving</div></div>
+      </div>
+    </div>
+    <div class="phase">
+      <div class="phase-header"><span class="phase-num">02</span><h2 class="phase-title">The Calculus Path</h2></div>
+      <div class="topic-list">
+        <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Limits & Continuity</strong> — the concept of approaching infinity</div></div>
+        <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Derivatives</strong> — rates of change and optimization</div></div>
+      </div>
+      <div class="resource-block">
+        <div class="resource-label">Resources</div>
+        <div class="resource-item">Professor Leonard (YouTube) — Best for deep lectures</div>
+        <div class="resource-item">3Blue1Brown (YouTube) — Essence of Calculus series</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="page-lang" class="track-page">
+    <div class="phase">
+      <div class="phase-header"><span class="phase-num">01</span><h2 class="phase-title">Syntax & Clarity</h2></div>
+      <div class="topic-list">
+        <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Grammar as Logic</strong> — how sentence structure mirrors thought structure</div></div>
+        <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Rhetoric</strong> — the art of persuasion and clear communication</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="page-self" class="track-page">
+    <div class="phase">
+      <div class="phase-header"><span class="phase-num">01</span><h2 class="phase-title">Cognitive Awareness</h2></div>
+      <div class="topic-list">
+        <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Identifying Biases</strong> — how your own brain hides the truth from you</div></div>
+        <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Media Literacy</strong> — reading news critically and identifying framing</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function show(track, btn) {
+  document.querySelectorAll('.track-page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + track).classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+</script>
+
+</body>
+</html>
