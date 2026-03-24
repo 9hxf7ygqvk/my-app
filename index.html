@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Personal Curriculum</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -29,109 +29,757 @@
     font-family: 'Inter', sans-serif;
     background: var(--page);
     color: var(--ink);
-    line-height: 1.5;
-    -webkit-tap-highlight-color: transparent;
-    /* Added padding for the iPhone 'notch' area when in full-screen mode */
-    padding-top: env(safe-area-inset-top);
+    line-height: 1.6;
+    font-size: 15px;
+    padding: 0;
   }
 
-  /* The rest of your original styles remain exactly the same */
-  .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-  header { margin-bottom: 40px; border-bottom: 1px solid var(--rule); padding-bottom: 20px; }
-  h1 { font-family: 'DM Serif Display', serif; font-size: 2.5rem; font-weight: 400; margin-bottom: 8px; }
-  .subtitle { font-family: 'DM Mono', monospace; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink3); }
-  
-  nav { display: flex; gap: 8px; margin-bottom: 30px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none; }
-  nav::-webkit-scrollbar { display: none; }
-  
-  .nav-btn { 
-    background: var(--cream); border: 1px solid var(--rule); padding: 8px 16px; border-radius: 20px;
-    font-size: 0.9rem; font-weight: 500; cursor: pointer; white-space: nowrap; transition: all 0.2s; color: var(--ink2);
+  .cover {
+    background: var(--ink);
+    color: var(--page);
+    padding: 64px 48px 56px;
+    position: relative;
+    overflow: hidden;
   }
-  .nav-btn.active { background: var(--ink); color: white; border-color: var(--ink); }
 
-  .track-page { display: none; animation: fadeIn 0.4s ease; }
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 300px; height: 300px;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 50%;
+  }
+
+  .cover::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: -60px;
+    width: 200px; height: 200px;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 50%;
+  }
+
+  .cover-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 20px;
+  }
+
+  .cover h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(36px, 6vw, 58px);
+    line-height: 1.05;
+    font-weight: 400;
+    margin-bottom: 24px;
+    max-width: 600px;
+  }
+
+  .cover h1 em {
+    font-style: italic;
+    color: rgba(255,255,255,0.6);
+  }
+
+  .cover-desc {
+    font-size: 14px;
+    color: rgba(255,255,255,0.5);
+    max-width: 480px;
+    line-height: 1.7;
+    margin-bottom: 40px;
+  }
+
+  .track-pills {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .pill {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    padding: 5px 12px;
+    border-radius: 100px;
+    border: 1px solid;
+  }
+
+  .pill.m { color: #e8836c; border-color: rgba(232,131,108,0.4); }
+  .pill.l { color: #6abf97; border-color: rgba(106,191,151,0.4); }
+  .pill.s { color: #9b8fe0; border-color: rgba(155,143,224,0.4); }
+
+  .page-nav {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--rule);
+    background: var(--cream);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .nav-btn {
+    flex: 1;
+    padding: 14px 16px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: var(--ink3);
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .nav-btn:hover { color: var(--ink); }
+  .nav-btn.active { color: var(--ink); border-bottom-color: var(--ink); }
+  .nav-btn.math.active { color: var(--math); border-bottom-color: var(--math); }
+  .nav-btn.lang.active { color: var(--lang); border-bottom-color: var(--lang); }
+  .nav-btn.self.active { color: var(--self); border-bottom-color: var(--self); }
+
+  .track-page { display: none; padding: 40px 32px 64px; max-width: 780px; margin: 0 auto; }
   .track-page.active { display: block; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-  .phase { margin-bottom: 40px; position: relative; }
-  .phase-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 15px; }
-  .phase-num { font-family: 'DM Mono', monospace; font-size: 0.8rem; color: var(--phase-num); font-weight: 500; }
-  .phase-title { font-family: 'DM Serif Display', serif; font-size: 1.4rem; }
+  .track-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 36px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--rule);
+  }
 
-  .topic-list { display: flex; flex-direction: column; gap: 16px; }
-  .topic { display: flex; gap: 12px; }
-  .topic-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--rule); margin-top: 8px; flex-shrink: 0; }
-  .topic-text { font-size: 1rem; color: var(--ink2); }
-  .topic-text strong { color: var(--ink); font-weight: 600; }
-  .note { display: block; font-size: 0.85rem; color: var(--ink3); margin-top: 4px; font-style: italic; }
+  .track-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 64px;
+    line-height: 1;
+    color: var(--rule);
+    flex-shrink: 0;
+    margin-top: -4px;
+  }
 
-  .resource-block { margin-top: 15px; padding: 15px; border-radius: 8px; border-left: 3px solid var(--rule); background: var(--cream); }
-  .resource-label { font-family: 'DM Mono', monospace; font-size: 0.7rem; text-transform: uppercase; color: var(--ink3); margin-bottom: 8px; }
-  .resource-item { font-size: 0.9rem; margin-bottom: 4px; color: var(--ink2); }
+  .track-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 32px;
+    font-weight: 400;
+    line-height: 1.1;
+    margin-bottom: 6px;
+  }
 
-  /* Track Specific Colors */
-  #page-math .phase-num { color: var(--math); }
-  #page-math .resource-block { border-left-color: var(--math); background: var(--math-bg); }
-  #page-lang .phase-num { color: var(--lang); }
-  #page-lang .resource-block { border-left-color: var(--lang); background: var(--lang-bg); }
-  #page-self .phase-num { color: var(--self); }
-  #page-self .resource-block { border-left-color: var(--self); background: var(--self-bg); }
+  .track-title.math { color: var(--math); }
+  .track-title.lang { color: var(--lang); }
+  .track-title.self { color: var(--self); }
+
+  .track-subtitle {
+    font-size: 13px;
+    color: var(--ink3);
+    line-height: 1.6;
+    max-width: 480px;
+  }
+
+  .phase {
+    margin-bottom: 36px;
+    border-left: 2px solid var(--rule);
+    padding-left: 24px;
+    position: relative;
+  }
+
+  .phase::before {
+    content: attr(data-phase);
+    position: absolute;
+    left: -14px;
+    top: 0;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    background: var(--page);
+    color: var(--phase-num);
+    line-height: 1;
+    padding: 3px 0;
+  }
+
+  .phase-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--phase-num);
+    margin-bottom: 6px;
+  }
+
+  .phase-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    font-weight: 400;
+    margin-bottom: 4px;
+  }
+
+  .phase-time {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--ink3);
+    margin-bottom: 14px;
+  }
+
+  .topics {
+    display: grid;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .topic {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: 6px;
+    background: var(--cream);
+    font-size: 13.5px;
+    line-height: 1.5;
+  }
+
+  .topic-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 5px;
+  }
+
+  .math .topic-dot { background: var(--math); }
+  .lang .topic-dot { background: var(--lang); }
+  .self .topic-dot { background: var(--self); }
+
+  .topic-text { flex: 1; }
+  .topic-text strong { font-weight: 500; }
+  .topic-text .note { color: var(--ink3); font-size: 12px; display: block; margin-top: 2px; }
+
+  .resource-block {
+    background: var(--cream2);
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin-top: 12px;
+  }
+
+  .resource-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink3);
+    margin-bottom: 8px;
+  }
+
+  .resource-item {
+    font-size: 13px;
+    color: var(--ink2);
+    margin-bottom: 4px;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+
+  .resource-item::before {
+    content: '→';
+    font-size: 11px;
+    color: var(--ink3);
+    flex-shrink: 0;
+  }
+
+  .practice-block {
+    margin-top: 14px;
+    padding: 14px 16px;
+    border: 1px dashed var(--rule);
+    border-radius: 6px;
+  }
+
+  .practice-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink3);
+    margin-bottom: 8px;
+  }
+
+  .practice-item {
+    font-size: 13px;
+    color: var(--ink2);
+    margin-bottom: 5px;
+    padding-left: 14px;
+    position: relative;
+  }
+
+  .practice-item::before {
+    content: '·';
+    position: absolute;
+    left: 4px;
+    color: var(--ink3);
+  }
+
+  .goal-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    font-size: 13px;
+  }
+
+  .goal-bar.math-bg { background: var(--math-bg); color: #7a2a1a; }
+  .goal-bar.lang-bg { background: var(--lang-bg); color: #1a4a32; }
+  .goal-bar.self-bg { background: var(--self-bg); color: #2a1e6a; }
+
+  .goal-icon {
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+
+  .overview-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+
+  .overview-card {
+    padding: 18px;
+    border-radius: 8px;
+    border: 1px solid var(--rule);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .overview-card:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+
+  .ov-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .ov-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 17px;
+    margin-bottom: 4px;
+    font-weight: 400;
+  }
+
+  .ov-desc { font-size: 12px; color: var(--ink3); line-height: 1.5; }
+
+  .daily-block {
+    background: var(--cream);
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+
+  .daily-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    margin-bottom: 16px;
+    font-weight: 400;
+  }
+
+  .daily-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--rule);
+    font-size: 13.5px;
+  }
+
+  .daily-row:last-child { border-bottom: none; }
+
+  .daily-time {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--ink3);
+    min-width: 80px;
+  }
+
+  .daily-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .note-block {
+    font-size: 13px;
+    color: var(--ink2);
+    line-height: 1.7;
+    padding: 14px 16px;
+    border-left: 3px solid var(--rule);
+    margin: 16px 0;
+  }
+
+  @media (max-width: 600px) {
+    .cover { padding: 40px 24px 44px; }
+    .track-page { padding: 28px 20px 48px; }
+    .overview-grid { grid-template-columns: 1fr; }
+    .track-header { flex-direction: column; gap: 8px; }
+    .track-num { font-size: 40px; }
+    .nav-btn { font-size: 10px; padding: 12px 10px; }
+  }
 </style>
 </head>
 <body>
 
-<div class="container">
-  <header>
-    <h1>Curriculum</h1>
-    <div class="subtitle">Personal Learning Architecture</div>
-  </header>
+<div class="cover">
+  <div class="cover-label">Personal Curriculum — Draft 1</div>
+  <h1>A Blueprint for<br><em>Self-Education</em></h1>
+  <p class="cover-desc">Three parallel tracks. No deadlines, no grades. Just a structured path from where you are to where you want to be — across math, language, and the hard work of knowing yourself.</p>
+  <div class="track-pills">
+    <span class="pill m">01 / Mathematics</span>
+    <span class="pill l">02 / Language Arts</span>
+    <span class="pill s">03 / Self-Discovery</span>
+  </div>
+</div>
 
-  <nav>
-    <button class="nav-btn active" onclick="show('math', this)">Mathematics</button>
-    <button class="nav-btn" onclick="show('lang', this)">Language & Logic</button>
-    <button class="nav-btn" onclick="show('self', this)">Self-Regulation</button>
-  </nav>
+<nav class="page-nav">
+  <button class="nav-btn active" onclick="show('overview', this)">Overview</button>
+  <button class="nav-btn math" onclick="show('math', this)">01 Math</button>
+  <button class="nav-btn lang" onclick="show('lang', this)">02 Language</button>
+  <button class="nav-btn self" onclick="show('self', this)">03 Self</button>
+</nav>
 
-  <div id="page-math" class="track-page active">
-    <div class="phase">
-      <div class="phase-header"><span class="phase-num">01</span><h2 class="phase-title">The Foundation</h2></div>
-      <div class="topic-list">
-        <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Algebraic Intuition</strong> — functions, variables, and the logic of balance<span class="note">Don't just solve for X; understand why X is related to Y.</span></div></div>
-        <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Geometry & Spatial Reasoning</strong> — proofs, logic, and visual problem solving</div></div>
-      </div>
+<!-- OVERVIEW -->
+<div id="page-overview" class="track-page active">
+  <div style="margin-bottom:32px;">
+    <div style="font-family:'DM Serif Display',serif;font-size:28px;margin-bottom:10px;font-weight:400;">How this works</div>
+    <p style="font-size:14px;color:var(--ink2);line-height:1.8;max-width:560px;">Three tracks running in parallel. Every day you touch all three — but the time is short enough to not feel overwhelming. Think of it like a workout split: each muscle group gets trained, nothing gets neglected.</p>
+  </div>
+
+  <div class="overview-grid">
+    <div class="overview-card" onclick="show('math', document.querySelector('.nav-btn.math'))">
+      <div class="ov-label" style="color:var(--math)">Track 01</div>
+      <div class="ov-title" style="color:var(--math)">Mathematics</div>
+      <div class="ov-desc">Arithmetic → Pre-Algebra → Algebra 1 → Geometry. Fill every gap on the way up. Built for creative use later.</div>
     </div>
-    <div class="phase">
-      <div class="phase-header"><span class="phase-num">02</span><h2 class="phase-title">The Calculus Path</h2></div>
-      <div class="topic-list">
-        <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Limits & Continuity</strong> — the concept of approaching infinity</div></div>
-        <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Derivatives</strong> — rates of change and optimization</div></div>
-      </div>
-      <div class="resource-block">
-        <div class="resource-label">Resources</div>
-        <div class="resource-item">Professor Leonard (YouTube) — Best for deep lectures</div>
-        <div class="resource-item">3Blue1Brown (YouTube) — Essence of Calculus series</div>
-      </div>
+    <div class="overview-card" onclick="show('lang', document.querySelector('.nav-btn.lang'))">
+      <div class="ov-label" style="color:var(--lang)">Track 02</div>
+      <div class="ov-title" style="color:var(--lang)">Language Arts</div>
+      <div class="ov-desc">Reading closely, taking real notes, writing expressively. From essay fundamentals to finding your own voice.</div>
+    </div>
+    <div class="overview-card" onclick="show('self', document.querySelector('.nav-btn.self'))">
+      <div class="ov-label" style="color:var(--self)">Track 03</div>
+      <div class="ov-title" style="color:var(--self)">Self-Discovery</div>
+      <div class="ov-desc">Structured reflection, philosophy primers, opinion auditing. Figure out what you actually think — and why.</div>
     </div>
   </div>
 
-  <div id="page-lang" class="track-page">
-    <div class="phase">
-      <div class="phase-header"><span class="phase-num">01</span><h2 class="phase-title">Syntax & Clarity</h2></div>
-      <div class="topic-list">
-        <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Grammar as Logic</strong> — how sentence structure mirrors thought structure</div></div>
-        <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Rhetoric</strong> — the art of persuasion and clear communication</div></div>
-      </div>
+  <div class="daily-block">
+    <div class="daily-title">Daily structure (≈ 2 hrs)</div>
+    <div class="daily-row">
+      <span class="daily-time">30–45 min</span>
+      <span class="daily-dot" style="background:var(--math)"></span>
+      <span><strong>Math</strong> — Khan Academy, in order. One concept at a time.</span>
+    </div>
+    <div class="daily-row">
+      <span class="daily-time">30–40 min</span>
+      <span class="daily-dot" style="background:var(--lang)"></span>
+      <span><strong>Reading + Writing</strong> — One short read, then write your reaction.</span>
+    </div>
+    <div class="daily-row">
+      <span class="daily-time">20–30 min</span>
+      <span class="daily-dot" style="background:var(--self)"></span>
+      <span><strong>Journal / Reflection</strong> — After something hits you, write it down.</span>
+    </div>
+    <div class="daily-row">
+      <span class="daily-time">Remaining</span>
+      <span class="daily-dot" style="background:#bdb9ac"></span>
+      <span><strong>Scrimba / Creative</strong> — Whatever energy is left. No pressure.</span>
     </div>
   </div>
 
-  <div id="page-self" class="track-page">
-    <div class="phase">
-      <div class="phase-header"><span class="phase-num">01</span><h2 class="phase-title">Cognitive Awareness</h2></div>
-      <div class="topic-list">
-        <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Identifying Biases</strong> — how your own brain hides the truth from you</div></div>
-        <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Media Literacy</strong> — reading news critically and identifying framing</div></div>
-      </div>
+  <div class="note-block">
+    The goal isn't speed. The goal is that six months from now you can read something complex and understand it, write something and mean it, do math without flinching, and know yourself well enough to make real decisions. That's it.
+  </div>
+</div>
+
+<!-- MATH TRACK -->
+<div id="page-math" class="track-page">
+  <div class="track-header">
+    <div class="track-num">01</div>
+    <div>
+      <div class="track-title math">Mathematics</div>
+      <div class="track-subtitle">You're not behind — you just have gaps. This track fills them in order, so nothing breaks later. The destination is geometry, but the real prize is understanding numbers well enough to use them creatively.</div>
+    </div>
+  </div>
+
+  <div style="margin-bottom:28px;">
+    <div class="goal-bar math-bg"><span class="goal-icon">◎</span> Main tool: Khan Academy (free, adaptive, tracks your progress)</div>
+  </div>
+
+  <!-- Phase 1 -->
+  <div class="phase" data-phase="●">
+    <div class="phase-label">Phase 1</div>
+    <div class="phase-title">Arithmetic Foundations</div>
+    <div class="phase-time">Estimated: 2–4 weeks</div>
+    <div class="topics math">
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Division</strong> — long division, remainders, dividing decimals<span class="note">Start here. Do the Khan exercises until they feel automatic, not just familiar.</span></div></div>
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Fractions</strong> — adding, subtracting, multiplying, dividing fractions<span class="note">This is the most important phase. Almost every math problem you'll ever do touches fractions.</span></div></div>
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Decimals & Percentages</strong> — converting between all three forms<span class="note">Fractions, decimals, and percentages are the same thing in three outfits. Understand the relationship.</span></div></div>
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Negative numbers</strong> — the number line, operations with negatives<span class="note">Sounds basic. Gets everyone. Do it properly.</span></div></div>
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Order of operations</strong> — PEMDAS, what it means and why it exists</div></div>
+    </div>
+    <div class="resource-block">
+      <div class="resource-label">Where to go</div>
+      <div class="resource-item">Khan Academy → "Arithmetic" unit (search it directly)</div>
+      <div class="resource-item">Do the practice exercises, not just the videos. The exercises are the actual learning.</div>
+    </div>
+  </div>
+
+  <!-- Phase 2 -->
+  <div class="phase" data-phase="●">
+    <div class="phase-label">Phase 2</div>
+    <div class="phase-title">Pre-Algebra</div>
+    <div class="phase-time">Estimated: 3–5 weeks</div>
+    <div class="topics math">
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Variables and expressions</strong> — what a variable actually is, simplifying<span class="note">This is the shift from arithmetic to algebra. A lot of people skip it and then algebra makes no sense.</span></div></div>
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Equations</strong> — one-step, two-step, solving for x<span class="note">Think of an equation as a balance scale. Whatever you do to one side, you do to the other.</span></div></div>
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Ratios and proportions</strong> — rates, unit rates, proportional relationships</div></div>
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Basic geometry concepts</strong> — angles, lines, area, perimeter, volume<span class="note">Preview of what's coming. Don't go deep yet — just get familiar with the shapes and vocab.</span></div></div>
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Exponents & roots</strong> — squares, cubes, square roots<span class="note">You'll need these constantly in algebra and geometry.</span></div></div>
+    </div>
+    <div class="resource-block">
+      <div class="resource-label">Where to go</div>
+      <div class="resource-item">Khan Academy → "Pre-algebra" course</div>
+      <div class="resource-item">YouTube: Professor Leonard's pre-algebra playlist (longer, but deeper)</div>
+    </div>
+  </div>
+
+  <!-- Phase 3 -->
+  <div class="phase" data-phase="●">
+    <div class="phase-label">Phase 3</div>
+    <div class="phase-title">Algebra 1</div>
+    <div class="phase-time">Estimated: 6–10 weeks</div>
+    <div class="topics math">
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Linear equations and inequalities</strong> — systems of equations, graphing lines<span class="note">Graphing a line is just visualizing a relationship. This is where math starts becoming visual.</span></div></div>
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Functions</strong> — what a function is, function notation, input/output<span class="note">Functions are everywhere in programming and generative art. This one matters for your other goals too.</span></div></div>
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Polynomials</strong> — adding, subtracting, multiplying<span class="note">The building blocks of most algebra that follows.</span></div></div>
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Factoring</strong> — GCF, factoring trinomials, difference of squares</div></div>
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Quadratic equations</strong> — FOIL, the quadratic formula, parabolas<span class="note">This is where algebra gets genuinely interesting. Parabolas show up in physics, art, and architecture.</span></div></div>
+    </div>
+    <div class="resource-block">
+      <div class="resource-label">Where to go</div>
+      <div class="resource-item">Khan Academy → "Algebra 1" course</div>
+      <div class="resource-item">Art of Problem Solving (AoPS) — for going deeper on any specific topic</div>
+    </div>
+  </div>
+
+  <!-- Phase 4 -->
+  <div class="phase" data-phase="●">
+    <div class="phase-label">Phase 4</div>
+    <div class="phase-title">Geometry</div>
+    <div class="phase-time">Estimated: 6–8 weeks</div>
+    <div class="topics math">
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Points, lines, planes, angles</strong> — the foundational vocabulary<span class="note">Geometry has its own language. Learn it first or everything else is confusing.</span></div></div>
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Triangles</strong> — types, congruence, similarity, the Pythagorean theorem<span class="note">The Pythagorean theorem shows up in 3D graphics, game dev, physics, and generative art constantly.</span></div></div>
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Circles</strong> — circumference, area, arc length, radians<span class="note">Radians are how computers think about rotation. This directly connects to creative coding.</span></div></div>
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Coordinate geometry</strong> — distance formula, midpoint, slope on a plane</div></div>
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Transformations</strong> — translation, rotation, reflection, scale<span class="note">This is the math behind every animation and generative artwork. This is where it clicks.</span></div></div>
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Proofs (light)</strong> — basic two-column proofs, logical reasoning<span class="note">Don't stress proofs. But doing a few teaches you to think rigorously.</span></div></div>
+    </div>
+    <div class="resource-block">
+      <div class="resource-label">Where to go</div>
+      <div class="resource-item">Khan Academy → "Geometry" course</div>
+      <div class="resource-item">3Blue1Brown on YouTube — for visual intuition on anything that confuses you</div>
+    </div>
+  </div>
+
+  <div class="practice-block">
+    <div class="practice-label">How to actually study math</div>
+    <div class="practice-item">Do the exercises first, then watch the video if you're stuck — not the other way around.</div>
+    <div class="practice-item">Write things out by hand. There's something about handwriting math that makes it stick differently.</div>
+    <div class="practice-item">If you get something wrong, don't skip it. Figure out exactly why you got it wrong.</div>
+    <div class="practice-item">30 minutes a day consistently beats 3 hours on a Saturday every time.</div>
+    <div class="practice-item">Once you hit geometry, try sketching the problems visually before solving them.</div>
+  </div>
+</div>
+
+<!-- LANGUAGE ARTS TRACK -->
+<div id="page-lang" class="track-page">
+  <div class="track-header">
+    <div class="track-num">02</div>
+    <div>
+      <div class="track-title lang">Language Arts</div>
+      <div class="track-subtitle">Reading to actually understand. Writing to actually say something. The goal isn't to sound smart — it's to be able to put exactly what you mean into words, the way a painting puts a feeling into color.</div>
+    </div>
+  </div>
+
+  <div style="margin-bottom:28px;">
+    <div class="goal-bar lang-bg"><span class="goal-icon">◎</span> End goal: Read anything, understand it deeply, write about it in your own voice</div>
+  </div>
+
+  <!-- Phase 1 -->
+  <div class="phase" data-phase="●">
+    <div class="phase-label">Phase 1</div>
+    <div class="phase-title">Reading with Intention</div>
+    <div class="phase-time">Start now, runs through everything</div>
+    <div class="topics lang">
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Active reading habit</strong> — read something every day, even if it's short<span class="note">Start with essays and long articles, not books. They're self-contained and easier to finish.</span></div></div>
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Annotation</strong> — underline, circle unfamiliar words, write in margins<span class="note">If you're reading on a screen, use the highlights tool or paste key lines into a notes doc.</span></div></div>
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Main idea vs detail</strong> — identify what the piece is actually arguing, vs what's supporting it<span class="note">Most people read the details and miss the argument. Ask: what is this person trying to say?</span></div></div>
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Vocabulary in context</strong> — when you hit an unknown word, try to infer the meaning first, then look it up<span class="note">Don't skip words. Every word you understand is a word you can eventually use.</span></div></div>
+    </div>
+    <div class="resource-block">
+      <div class="resource-label">Good places to read</div>
+      <div class="resource-item">The Atlantic, Aeon, The Paris Review (free essays online)</div>
+      <div class="resource-item">Wikipedia "deep dives" — pick a topic you're curious about, follow links</div>
+      <div class="resource-item">Project Gutenberg — free classic books, especially short novellas</div>
+    </div>
+    <div class="practice-block">
+      <div class="practice-label">After reading, write 3–5 sentences</div>
+      <div class="practice-item">What did this piece argue or show?</div>
+      <div class="practice-item">What's one thing you agreed with, one thing you pushed back on?</div>
+      <div class="practice-item">What question does it leave you with?</div>
+    </div>
+  </div>
+
+  <!-- Phase 2 -->
+  <div class="phase" data-phase="●">
+    <div class="phase-label">Phase 2</div>
+    <div class="phase-title">Note-Taking Systems</div>
+    <div class="phase-time">Weeks 2–4</div>
+    <div class="topics lang">
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>The Cornell Method</strong> — divide your page: notes on the right, key questions on the left, summary at the bottom<span class="note">Good for structured content like textbooks, articles with clear points.</span></div></div>
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>The "In Your Own Words" rule</strong> — never copy text into notes. Paraphrase everything.<span class="note">If you can't paraphrase it, you haven't understood it yet.</span></div></div>
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Linking ideas</strong> — after notes from different sources, try connecting them: how does this reading relate to that one?<span class="note">This is where actual thinking starts happening.</span></div></div>
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Review practice</strong> — go back over notes 24 hrs later and write one sentence summarizing what you'd keep</div></div>
+    </div>
+  </div>
+
+  <!-- Phase 3 -->
+  <div class="phase" data-phase="●">
+    <div class="phase-label">Phase 3</div>
+    <div class="phase-title">Writing Fundamentals</div>
+    <div class="phase-time">Weeks 3–8, ongoing</div>
+    <div class="topics lang">
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>The sentence</strong> — what makes a sentence clear, what makes it interesting<span class="note">Most bad writing is bad at the sentence level. Read your sentences out loud. If it's awkward spoken, it's awkward written.</span></div></div>
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>The paragraph</strong> — one idea per paragraph, topic sentence, supporting detail, closing thought<span class="note">A paragraph is a unit of thought. If you have two ideas, use two paragraphs.</span></div></div>
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>The basic essay structure</strong> — intro (what you're arguing + why), body (your reasoning), conclusion (what it means)<span class="note">Essays are just organized thinking. The structure exists to help the reader follow you, not to constrain you.</span></div></div>
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Voice</strong> — writing in a way that sounds like you, not like a textbook<span class="note">Don't write how you think you're supposed to write. Write how you'd explain it to someone you respect.</span></div></div>
+    </div>
+    <div class="resource-block">
+      <div class="resource-label">Resources</div>
+      <div class="resource-item">On Writing Well — William Zinsser (the clearest book on clear writing)</div>
+      <div class="resource-item">Strunk & Elements of Style — short, free online, skip the style rules, read the clear thinking advice</div>
+      <div class="resource-item">Khan Academy → "Writing" unit for essay structure basics</div>
+    </div>
+  </div>
+
+  <!-- Phase 4 -->
+  <div class="phase" data-phase="●">
+    <div class="phase-label">Phase 4</div>
+    <div class="phase-title">Expressive Writing</div>
+    <div class="phase-time">Month 2 onward</div>
+    <div class="topics lang">
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Personal essay</strong> — write about something that happened to you and what it meant<span class="note">The personal essay is where writing and self-discovery overlap. It's also the hardest form to fake.</span></div></div>
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Lyric essay</strong> — non-linear, image-driven, more like a painting than an argument<span class="note">This might be the form closest to what you described wanting. Look up Maggie Nelson's "Bluets" as an example.</span></div></div>
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Critical writing</strong> — write about a piece of art, music, or book and argue why it matters (or doesn't)</div></div>
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Stream of consciousness practice</strong> — 10 minutes, write without stopping, don't edit<span class="note">Not meant to be good. Meant to get the internal monologue onto paper so you can see what it actually looks like.</span></div></div>
+    </div>
+    <div class="practice-block">
+      <div class="practice-label">Weekly writing practice</div>
+      <div class="practice-item">Mon/Wed/Fri: Short writes (1 paragraph, react to something you read or saw)</div>
+      <div class="practice-item">Once a week: Longer piece (1–2 pages, any form you want)</div>
+      <div class="practice-item">Don't delete anything. Even bad drafts are data.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SELF-DISCOVERY TRACK -->
+<div id="page-self" class="track-page">
+  <div class="track-header">
+    <div class="track-num">03</div>
+    <div>
+      <div class="track-title self">Self-Discovery</div>
+      <div class="track-subtitle">Most people go their whole lives never seriously asking: do I believe this because I thought it through, or because I absorbed it? This track is about developing the habit of asking that question — and being honest enough to sit with the answer.</div>
+    </div>
+  </div>
+
+  <div style="margin-bottom:28px;">
+    <div class="goal-bar self-bg"><span class="goal-icon">◎</span> End goal: Know what you actually think, where it came from, and why it might be wrong</div>
+  </div>
+
+  <!-- Phase 1 -->
+  <div class="phase" data-phase="●">
+    <div class="phase-label">Phase 1</div>
+    <div class="phase-title">The Reflection Journal</div>
+    <div class="phase-time">Start now, runs forever</div>
+    <div class="topics self">
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Keep a private doc or physical notebook</strong> — not for anyone else, not to post<span class="note">It only works if it's completely private. The moment you're writing for an audience, you start performing.</span></div></div>
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>The two-question habit</strong> — after anything that triggers a reaction (video, conversation, art): "What do I actually think?" then "Why do I think that?"<span class="note">The second question is the one that does the work.</span></div></div>
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Opinion audit</strong> — once a week, pick one opinion you hold strongly and argue the other side as convincingly as you can<span class="note">If you can't steelman the opposing view, you don't understand your own position yet.</span></div></div>
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Trace your influences</strong> — when you notice a belief or taste, ask: where did I first get this?<span class="note">Most of what we think we chose, we absorbed. That's fine — but it's worth knowing.</span></div></div>
+    </div>
+    <div class="practice-block">
+      <div class="practice-label">Journal prompts to start with</div>
+      <div class="practice-item">"Something I believed last year that I'm not sure about anymore..."</div>
+      <div class="practice-item">"A thing I find beautiful that I can't fully explain why..."</div>
+      <div class="practice-item">"An opinion I hold that I think I got from [person/place] — and whether I actually agree..."</div>
+      <div class="practice-item">"Something I avoid thinking about and why..."</div>
+      <div class="practice-item">"What kind of person do I want to be in 5 years? What would that person think about how I'm spending today?"</div>
+    </div>
+  </div>
+
+  <!-- Phase 2 -->
+  <div class="phase" data-phase="●">
+    <div class="phase-label">Phase 2</div>
+    <div class="phase-title">Philosophy Primers</div>
+    <div class="phase-time">Month 1–2, ≈20 min/week</div>
+    <div class="topics self">
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Epistemology basics</strong> — how do we know what we know? What makes a belief justified?<span class="note">This is directly relevant to figuring out whether your opinions are actually yours.</span></div></div>
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Stoic basics</strong> — Marcus Aurelius, Epictetus, what you control vs what you don't<span class="note">Not for motivation. For a framework for thinking about your situation clearly and without drama.</span></div></div>
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Ethics 101</strong> — consequentialism, deontology, virtue ethics (not to memorize, to have a vocabulary for moral thinking)<span class="note">Gives you language for arguments you're already having internally.</span></div></div>
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Existentialism light</strong> — Sartre's "existence precedes essence", Camus on absurdity<span class="note">Don't get lost here. Read, journal about it, move on. The point is exposure, not mastery.</span></div></div>
+    </div>
+    <div class="resource-block">
+      <div class="resource-label">Where to start</div>
+      <div class="resource-item">Crash Course Philosophy (YouTube) — dense but fast, good overview</div>
+      <div class="resource-item">Marcus Aurelius: Meditations — read a few pages at a time, not cover to cover</div>
+      <div class="resource-item">The School of Life (YouTube) — accessible, visual, on specific thinkers</div>
+    </div>
+  </div>
+
+  <!-- Phase 3 -->
+  <div class="phase" data-phase="●">
+    <div class="phase-label">Phase 3</div>
+    <div class="phase-title">Taste & Identity Mapping</div>
+    <div class="phase-time">Ongoing from month 2</div>
+    <div class="topics self">
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Build a "things I love" archive</strong> — images, music, writing, art, ideas that you react to viscerally<span class="note">The goal is to look for patterns. What do the things you love have in common? That tells you something real.</span></div></div>
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Write about your taste</strong> — pick something you love and try to articulate exactly what about it you love<span class="note">Taste is not mystical. It's preference, and preference has reasons — even if they're hard to name at first.</span></div></div>
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Challenge your aesthetic defaults</strong> — once a month, seriously engage with something you'd normally skip<span class="note">The point isn't to change what you like. It's to make sure your tastes are chosen, not just defaults.</span></div></div>
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Who do you admire and why</strong> — write about someone you look up to and try to name exactly what quality you're responding to<span class="note">Usually what you admire in others is a value you hold but haven't named yet.</span></div></div>
+    </div>
+  </div>
+
+  <!-- Phase 4 -->
+  <div class="phase" data-phase="●">
+    <div class="phase-label">Phase 4</div>
+    <div class="phase-title">Critical Thinking Habits</div>
+    <div class="phase-time">Month 2 onward</div>
+    <div class="topics self">
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Identifying logical fallacies</strong> — straw man, false dichotomy, ad hominem, appeal to authority<span class="note">Not to win arguments. To notice when you're using them in your own thinking.</span></div></div>
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Cognitive biases</strong> — confirmation bias, in-group bias, availability heuristic<span class="note">Everyone has them. The goal is to know which ones affect you most.</span></div></div>
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Media literacy</strong> — reading news critically, distinguishing reporting from opinion, identifying framing<span class="note">The skill isn't skepticism of everything — it's knowing what questions to ask about a source.</span></div></div>
+      <div class="topic"><span class="topic-dot"></span><div class="topic-text"><strong>Intellectual honesty practices</strong> — updating your views when evidence changes, saying "I don't know" more<span class="note">This is rare. Most people defend whatever they believed at age 16 for the rest of their lives.</span></div></div>
+    </div>
+    <div class="resource-block">
+      <div class="resource-label">Resources</div>
+      <div class="resource-item">Your Logical Fallacy Is — logicalfallacies.info (free, visual)</div>
+      <div class="resource-item">Thinking, Fast and Slow — Daniel Kahneman (ambitious but worth it over time)</div>
+      <div class="resource-item">Farnam Street Blog (fs.blog) — mental models, decision making, free essays</div>
     </div>
   </div>
 </div>
